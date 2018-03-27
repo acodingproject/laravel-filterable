@@ -86,8 +86,17 @@ abstract class Filterable implements FilterableContract
         $this->builderPresent();
 
         foreach ($this->filters() as $filter => $value) {
-            if (method_exists($this, $filter)) {
-                $this->builder = (is_null($value)) ? $this->$filter() : $this->$filter($value);
+            $method = $filter;
+            $parameter = [];
+            if (false !== strpos($method, ':')) {
+                list($method, $parameter) = explode(':', $method);
+                $parameter = explode(',', $parameter);
+            }
+            if ( ! is_null($value)) {
+                $parameter = array_merge([$value], $parameter);
+            }
+            if (method_exists($this, $method)) {
+                $this->builder = call_user_func_array([$this, $method], $parameter);
                 continue;
             }
             throw new \Exception('Filter \''.$filter.'\' is declared in \'filterMap\', but it does not exist.');
