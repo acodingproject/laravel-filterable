@@ -24,7 +24,7 @@
         "illuminate/http": "8.*"
     },
     "require-dev": {
-        "phpunit/phpunit": "^*",
+        "phpunit/phpunit": "*",
         "orchestra/testbench": "*"
     },
     "autoload": {
